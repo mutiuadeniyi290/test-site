@@ -66,6 +66,10 @@
             width: 100%;
             max-width: 600px;
         }
+        .upload {
+            text-align: center;
+            margin: 20px 0;
+        }
         footer {
             background-color: #333;
             color: #fff;
@@ -86,7 +90,7 @@
 
     <div class="container">
         <div class="marquee">
-            <span>Now playing: Song Title - Artist Name | Stay tuned for the latest hits and classics!</span>
+            <span id="marqueeText">Now playing: Song Title - Artist Name | Stay tuned for the latest hits and classics!</span>
         </div>
 
         <div class="showcase">
@@ -95,10 +99,14 @@
         </div>
 
         <div class="player">
-            <audio controls>
-                <source src="sample-audio.mp3" type="audio/mpeg">
+            <audio id="audioPlayer" controls>
+                <source id="audioSource" src="sample-audio.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
+        </div>
+
+        <div class="upload">
+            <input type="file" id="fileInput" accept="audio/*">
         </div>
     </div>
 
@@ -107,9 +115,23 @@
     </footer>
 
     <script>
-        const marquee = document.querySelector('.marquee span');
-        marquee.addEventListener('mouseover', () => marquee.style.animationPlayState = 'paused');
-        marquee.addEventListener('mouseout', () => marquee.style.animationPlayState = 'running');
+        const marqueeText = document.getElementById('marqueeText');
+        const fileInput = document.getElementById('fileInput');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioSource = document.getElementById('audioSource');
+
+        marqueeText.addEventListener('mouseover', () => marqueeText.style.animationPlayState = 'paused');
+        marqueeText.addEventListener('mouseout', () => marqueeText.style.animationPlayState = 'running');
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                audioSource.src = url;
+                audioPlayer.load();
+                marqueeText.textContent = `Now playing: ${file.name}`;
+            }
+        });
     </script>
 </body>
 </html>
